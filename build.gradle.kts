@@ -1,16 +1,9 @@
-import kotlin.io.path.createDirectory
-import kotlin.io.path.exists
-
 plugins {
-    java
-    application
+    id("java")
 }
 
-val projectVersion: String by extra
-
 group = "dev.danipraivet"
-version = projectVersion
-sourceSets.main.get().resources.srcDirs("src/main/resources")
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -21,28 +14,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.jar {
-    manifest {
-        attributes(
-            "Main-Class" to "dev.danipraivet.game.Main"
-        )
-    }
-}
-
 tasks.test {
     useJUnitPlatform()
-}
-
-tasks.processResources {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.named<JavaExec>("run") {
-    val path = rootDir.toPath().resolve("run")
-
-    workingDir = path.toFile()
-    standardInput = System.`in`
-    standardOutput = System.out
-
-    if (!path.exists()) path.createDirectory()
 }
