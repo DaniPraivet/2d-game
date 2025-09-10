@@ -8,6 +8,7 @@ public class WindowGame extends JFrame {
     public static final int WINDOW_HEIGHT = 1080;
 
     public WindowGame() {
+        PANEL = new GamePanel(this);
         setTitle("ChupiColasJuego");
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
