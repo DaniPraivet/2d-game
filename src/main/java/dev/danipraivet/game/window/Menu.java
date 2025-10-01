@@ -21,6 +21,8 @@ public class Menu  extends JPanel {
             JButton bExit = createButton("EXIT", bg, font, new Color(220, 20, 60));
             JButton bControls = createButton("CONTROLS", bg, font);
 
+            bPlay.addActionListener(e -> wg.start());
+            bControls.addActionListener(e -> wg.showControls());
             bExit.addActionListener(e -> System.exit(0));
 
             GridBagConstraints gbc = new GridBagConstraints();
