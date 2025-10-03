@@ -1,5 +1,6 @@
 package dev.danipraivet.game.entities;
 
+import dev.danipraivet.game.math.Velocity;
 import dev.danipraivet.game.window.WindowGame;
 
 import java.awt.*;
@@ -13,7 +14,20 @@ public abstract class Entity implements Character{
     protected int hp = 80;
     protected Rectangle hitbox;
     private boolean showHitbox = false;
+    protected Velocity velocity;
     Image sprite;
+
+    static {
+        calculateEntitySize(WindowGame.WINDOW_WIDTH, WindowGame.WINDOW_HEIGHT);
+    }
+
+    public Entity(double x, double y, Color color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        velocity = new Velocity(x, y);
+        hitbox = new Rectangle(WIDTH, HEIGHT);
+    }
 
     public static int getWIDTH() {
         return WIDTH;
@@ -80,21 +94,12 @@ public abstract class Entity implements Character{
     }
 
     public void move(int dx, int dy) {
-
+        x += dx;
+        y += dy;
     }
 
     public void update() {
-
-    }
-
-    static {
-        calculateEntitySize(WindowGame.WINDOW_WIDTH, WindowGame.WINDOW_HEIGHT);
-    }
-
-    public Entity(double x, double y, Color color) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
+        velocity.update(this);
     }
 
     public static void calculateEntitySize(int w, int h) {

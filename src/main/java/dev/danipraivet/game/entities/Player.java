@@ -3,9 +3,11 @@ package dev.danipraivet.game.entities;
 import java.awt.*;
 
 public class Player extends Entity {
-    Color color = Color.RED;
+    public Player(double x, double y) {
+        super(x, y , Color.RED);
+    }
 
-    public Player(double x, double y, Color color) {
-        super(x, y, color);
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, getWIDTH(), getHEIGHT());
     }
 }

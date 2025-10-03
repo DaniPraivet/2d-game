@@ -57,10 +57,10 @@ public class ControllerGame implements KeyListener {
             player.move(SPEED, 0);
         }
         if (w) {
-            player.move(0, SPEED);
+            player.move(0, -SPEED);
         }
         if (s) {
-            player.move(0, -SPEED);
+            player.move(0, SPEED);
         }
     }
 }
