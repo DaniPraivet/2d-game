@@ -5,15 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HorizontalPattern extends Obstacle {
-    private final List<Rectangle> blocks = new ArrayList<>();
-    private final int blockCount = 4;
+    private final List<Rectangle> cubes = new ArrayList<>();
+    private final int panelWidth;
+    private final int panelHeight;
 
-    public HorizontalPattern(int startX, int startY, int blockSize, int initialSpeed, int dx) {
-        super(startX, startY, blockSize, blockSize, initialSpeed, dx, 0);
+    public HorizontalPattern(int panelWidth, int panelHeight, int size, int speed) {
+        // Dummy initial position (not used directly)
+        super(0, 0, size, size, speed, 0, 0);
 
-        for (int i = 0; i < blockCount; i++) {
-            blocks.add(new Rectangle(x + (blockSize + 10) * i, startY, blockSize, blockSize));
-        }
+        this.panelWidth = panelWidth;
+        this.panelHeight = panelHeight;
+
+        // top cube (left side → right)
+        cubes.add(new Rectangle(0 - size, size, size, size));
+
+        // middle cube (right side → left)
+        cubes.add(new Rectangle(panelWidth, panelHeight / 2 - size / 2, size, size));
+
+        // bottom cube (left side → right)
+        cubes.add(new Rectangle(0 - size, panelHeight - size * 2, size, size));
     }
 
     @Override
@@ -23,34 +33,44 @@ public class HorizontalPattern extends Obstacle {
 
     @Override
     public void update() {
-        for (Rectangle block : blocks) {
-            block.x += dx * speed;
+        // Move top and bottom cubes right, center cube left
+        for (int i = 0; i < cubes.size(); i++) {
+            Rectangle c = cubes.get(i);
+            if (i == 1) { // middle one
+                c.x -= speed;
+            } else {
+                c.x += speed;
+            }
         }
     }
 
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.RED);
-        for (Rectangle block : blocks) {
-            g.fillRect(block.x, block.y, block.width, block.height);
+        for (Rectangle c : cubes) {
+            g.fillRect(c.x, c.y, c.width, c.height);
         }
     }
 
     @Override
     public boolean collision(Rectangle r) {
-        for (Rectangle block : blocks) {
-            if (block.intersects(r)) return true;
+        for (Rectangle c : cubes) {
+            if (c.intersects(r)) return true;
         }
         return false;
     }
 
     @Override
     public boolean isOutOfBounds(int panelWidth, int panelHeight) {
-        for (Rectangle block : blocks) {
-            if (block.x + block.width > 0 && block.x + block.width < panelWidth)
-                return false;
+        // All cubes have exited the screen
+        boolean allOffScreen = true;
+        for (Rectangle c : cubes) {
+            if (c.x + c.width >= 0 && c.x <= panelWidth) {
+                allOffScreen = false;
+                break;
+            }
         }
-        return true;
+        return allOffScreen;
     }
 
 }

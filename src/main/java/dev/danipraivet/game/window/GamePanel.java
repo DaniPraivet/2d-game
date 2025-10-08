@@ -76,7 +76,7 @@ public class GamePanel extends JPanel {
 
         int pattern = (int) (Math.random() * 3);
         switch (pattern) {
-            case 0 -> obstacles.add(new HorizontalPattern(x, y, 50, 2, Math.random() < 0.5 ? 1 : -1));
+            case 0 -> obstacles.add(new HorizontalPattern(getWidth(), getHeight(), 60, 4));
             case 1 -> obstacles.add(new WavePattern(x, y, 2, Math.random() < 0.5 ? 1 : -1, 0));
             case 2 -> obstacles.add(new ZigZagPattern(x, y, 2, Math.random() < 0.5 ? 1 : -1));
         }
