@@ -2,10 +2,7 @@ package dev.danipraivet.game.window;
 
 import dev.danipraivet.game.ControllerGame;
 import dev.danipraivet.game.entities.Player;
-import dev.danipraivet.game.obstacles.BasicObstacle;
-import dev.danipraivet.game.obstacles.Obstacle;
-import dev.danipraivet.game.obstacles.WaveObstacle;
-import dev.danipraivet.game.obstacles.ZigZagObstacle;
+import dev.danipraivet.game.obstacles.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,11 +15,6 @@ public class GamePanel extends JPanel {
     private static boolean RUNNING = true;
     private final List<Obstacle> obstacles = new ArrayList<>();
     private static final int SAFE_RADIUS = 100;
-
-    private void initObstacles() {
-        obstacles.add(new WaveObstacle(100,50,30,30,2, 1, 0));
-        obstacles.add(new ZigZagObstacle(200,150,40,40,3, -1, 0));
-    }
 
     public Player getPlayer() {
         return player;
@@ -38,8 +30,6 @@ public class GamePanel extends JPanel {
         setFocusable(true);
 
         player = new Player(0, 0);
-
-        initObstacles();
 
         new Thread(()->{
             while (RUNNING) {
@@ -68,14 +58,6 @@ public class GamePanel extends JPanel {
         int panelWidth = getWidth();
         int panelHeight = getHeight();
 
-        if (panelWidth <= 0 || panelHeight <= 0) return;
-
-        int size = 30;
-        int speed = 2;
-
-        int x, y, dx = 0, dy = 0;
-        boolean valid = false;
-
         Rectangle safeZone = new Rectangle(
                 (int) player.getX() - SAFE_RADIUS,
                 (int) player.getY() - SAFE_RADIUS,
@@ -83,38 +65,20 @@ public class GamePanel extends JPanel {
                 SAFE_RADIUS * 2
         );
 
+        boolean valid = false;
+        int x = 0, y = 0;
         while (!valid) {
-            int edge = (int)(Math.random() * 4);
-
-            switch (edge) {
-                case 0 -> { // left edge
-                    x = 0;
-                    y = (int) (Math.random() * panelHeight);
-                    dx = 1;
-                    dy = 0;
-                }
-                case 1 -> { // right edge
-                    x = panelWidth - size;
-                    y = (int) (Math.random() * panelHeight);
-                    dx = -1; dy = 0;
-                }
-                case 2 -> { // top edge
-                    x = (int)(Math.random() * panelWidth);
-                    y = 0;
-                    dx = 0; dy = 1;
-                }
-                default -> { // bottom edge
-                    x = (int)(Math.random() * panelWidth);
-                    y = panelHeight - size;
-                    dx = 0; dy = -1;
-                }
+            x = (int) (Math.random() * panelWidth);
+            y = (int) (Math.random() * panelHeight);
+            Rectangle obstacleArea = new Rectangle(x, y, 80, 80);
+            valid = !safeZone.intersects(obstacleArea);
         }
-        Rectangle obstacle = new Rectangle(x, y, size, size);
 
-            if (!safeZone.intersects(obstacle)) {
-                valid = true;
-                obstacles.add(new BasicObstacle(x,y,size,size,speed,dx, dy));
-            }
+        int pattern = (int) (Math.random() * 3);
+        switch (pattern) {
+            case 0 -> obstacles.add(new HorizontalPattern(getWidth(), getHeight(), 60, 4));
+            case 1 -> obstacles.add(new WavePattern(x, y, 2, Math.random() < 0.5 ? 1 : -1, 0));
+            case 2 -> obstacles.add(new ZigZagPattern(x, y, 2, Math.random() < 0.5 ? 1 : -1));
         }
     }
 
