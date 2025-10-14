@@ -46,7 +46,7 @@ public class HorizontalPattern extends Obstacle {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.RED);
+        g.setColor(Color.GREEN);
         for (Rectangle c : cubes) {
             g.fillRect(c.x, c.y, c.width, c.height);
         }
